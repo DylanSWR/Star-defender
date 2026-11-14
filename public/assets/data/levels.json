@@ -1,0 +1,7 @@
+[
+  { "level": 1, "count": 10, "delay": 1100, "types": ["grunt"] },
+  { "level": 2, "count": 14, "delay": 950,  "types": ["grunt", "weaver"] },
+  { "level": 3, "count": 18, "delay": 850,  "types": ["grunt", "weaver", "gunner"] },
+  { "level": 4, "count": 24, "delay": 700,  "types": ["weaver", "gunner", "grunt"] },
+  { "level": 5, "count": 8,  "delay": 900,  "types": ["grunt", "weaver"], "boss": true }
+]
