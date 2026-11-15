@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import {
   GAME_WIDTH as W, GAME_HEIGHT as H, PLAYER, TOTAL_LEVELS,
-  POWERUP_KINDS, POWERUP_DROP_CHANCE, COLORS, FONT
+  POWERUP_KINDS, POWERUP_DROP_CHANCE, INVENTORY, COLORS, FONT
 } from '../config.js';
 import Player from '../objects/Player.js';
 import Bullet from '../objects/Bullet.js';
@@ -10,6 +10,7 @@ import PowerUp from '../objects/PowerUp.js';
 import HUD from '../ui/HUD.js';
 import TouchControls from '../ui/TouchControls.js';
 import WaveManager from '../managers/WaveManager.js';
+import InventoryManager from '../managers/InventoryManager.js';
 import StorageManager from '../managers/StorageManager.js';
 import audio from '../audio/AudioManager.js';
 import gameState, { STATES } from '../managers/GameStateManager.js';
@@ -55,17 +56,25 @@ export default class GameScene extends Phaser.Scene {
       blendMode: 'ADD', emitting: false
     }).setDepth(50);
 
+    // En móvil el inventario se corre a la zona libre entre los botones de mover y de fuego.
+    const hasTouch = this.sys.game.device.input.touch;
     this.hud = new HUD(this, {
       highScore: this.highScore,
       onPause: () => this.togglePause(),
-      onMute: () => this.toggleMute()
+      onMute: () => this.toggleMute(),
+      onSlot: (slot) => this.inventory.activate(slot),
+      inventoryX: hasTouch ? 281 : W / 2
     });
     this.hud.setLives(this.player.lives);
+
+    // Inventario y armas temporales (necesita el jugador, los enemigos y el HUD ya creados).
+    this.inventory = new InventoryManager(this);
+    this.inventory.refreshHud();
 
     // Controles: teclado siempre; botones táctiles solo en dispositivos con pantalla táctil.
     this.cursors = this.input.keyboard.createCursorKeys();
     this.keys = this.input.keyboard.addKeys({ a: 'A', d: 'D', space: 'SPACE' });
-    this.touch = this.sys.game.device.input.touch ? new TouchControls(this) : null;
+    this.touch = hasTouch ? new TouchControls(this) : null;
     this.input.keyboard.on('keydown-P', () => this.togglePause());
     this.input.keyboard.on('keydown-ESC', () => this.togglePause());
     this.input.keyboard.on('keydown-M', () => this.toggleMute());
@@ -90,6 +99,7 @@ export default class GameScene extends Phaser.Scene {
     if (controls.fire) this.player.shoot(time);
 
     this.waves.update(time);
+    this.inventory.update(delta);
 
     if (this.boss && this.boss.active) this.hud.setBossRatio(this.boss.hp / this.boss.maxHp);
   }
@@ -156,16 +166,13 @@ export default class GameScene extends Phaser.Scene {
     this.explode(boss.x, boss.y, 30);
     audio.play('explosion');
 
-    // Recompensa por cada fase superada. Si el sistema de inventario existe (dropWeaponCrate), suelta
-    // una caja de arma; si no, suelta un power-up normal.
-    const x = boss.x;
-    const y = boss.y + 50;
-    if (typeof this.dropWeaponCrate === 'function') {
-      this.dropWeaponCrate(x, y);
-    } else {
-      const powerUp = this.powerUps.get(x, y);
-      if (powerUp) powerUp.spawn(phase === 2 ? 'shield' : 'triple', x, y);
-    }
+    // Recompensa por cada fase superada: una caja de arma (ver dropWeaponCrate).
+    this.dropWeaponCrate(boss.x, boss.y + 50);
+  }
+
+  /** Suelta una caja de arma en (x, y). Sin "kind" el tipo se sortea. La usan el jefe y los enemigos. */
+  dropWeaponCrate(x, y, kind) {
+    this.inventory.dropCrate(x, y, kind);
   }
 
   showBanner(text, color = COLORS.gold, y = H / 2 - 80) {
@@ -239,6 +246,8 @@ export default class GameScene extends Phaser.Scene {
         });
       }
       this.endGame(true); // condición de victoria: derrotar al jefe
+    } else if (Math.random() < INVENTORY.crateDropChance) {
+      this.dropWeaponCrate(x, y); // caja de arma (inventario)
     } else if (Math.random() < POWERUP_DROP_CHANCE) {
       const powerUp = this.powerUps.get(x, y);
       if (powerUp) powerUp.spawn(Phaser.Utils.Array.GetRandom(POWERUP_KINDS), x, y);
@@ -283,6 +292,7 @@ export default class GameScene extends Phaser.Scene {
     this.finished = true;
     gameState.set(STATES.GAME_OVER);
     this.player.setVelocity(0, 0);
+    this.inventory.stopAll();
     this.clearHostiles();
     audio.play(won ? 'win' : 'lose');
 
