@@ -12,6 +12,7 @@ import TouchControls from '../ui/TouchControls.js';
 import WaveManager from '../managers/WaveManager.js';
 import StorageManager from '../managers/StorageManager.js';
 import audio from '../audio/AudioManager.js';
+import gameState, { STATES } from '../managers/GameStateManager.js';
 import { registerCollisions } from '../physics/collisions.js';
 
 // Escena principal: crea los objetos, lee los controles y reacciona a las colisiones.
@@ -31,6 +32,7 @@ export default class GameScene extends Phaser.Scene {
     this.finished = false;
     this.boss = null;
     this.highScore = StorageManager.highScore;
+    gameState.set(STATES.PLAYING);
 
     // Solo los bordes laterales rebotan (los power-ups); arriba y abajo quedan libres.
     this.physics.world.setBoundsCollision(true, true, false, false);
@@ -103,12 +105,14 @@ export default class GameScene extends Phaser.Scene {
 
   // ---------- Pausa y sonido ----------
   togglePause() {
-    if (this.finished) return;
+    if (this.finished || !gameState.is(STATES.PLAYING)) return;
+    gameState.set(STATES.PAUSED);
     this.scene.launch('PauseScene');
     this.scene.pause();
   }
 
   handleResume() {
+    gameState.set(STATES.PLAYING);
     this.input.keyboard.resetKeys();
     if (this.touch) this.touch.reset();
     this.hud.refreshMute();
@@ -254,6 +258,7 @@ export default class GameScene extends Phaser.Scene {
   endGame(won) {
     if (this.finished) return;
     this.finished = true;
+    gameState.set(STATES.GAME_OVER);
     this.player.setVelocity(0, 0);
     this.clearHostiles();
     audio.play(won ? 'win' : 'lose');

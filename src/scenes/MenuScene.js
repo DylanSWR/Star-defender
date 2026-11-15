@@ -3,6 +3,7 @@ import { GAME_WIDTH as W, GAME_HEIGHT as H, FONT, COLORS } from '../config.js';
 import Button from '../ui/Button.js';
 import StorageManager from '../managers/StorageManager.js';
 import audio from '../audio/AudioManager.js';
+import gameState, { STATES } from '../managers/GameStateManager.js';
 
 // Menú principal: iniciar, continuar (nivel guardado), sonido, instrucciones y controles.
 export default class MenuScene extends Phaser.Scene {
@@ -11,6 +12,8 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   create() {
+    gameState.set(STATES.MENU);
+
     this.stars1 = this.add.tileSprite(W / 2, H / 2, W, H, 'stars1');
     this.stars2 = this.add.tileSprite(W / 2, H / 2, W, H, 'stars2');
 
