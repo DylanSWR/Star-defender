@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { GAME_WIDTH } from '../config.js';
 import StorageManager from './StorageManager.js';
+import Boss from '../objects/Boss.js';
 
 // Controla las oleadas. Los datos de cada nivel (cantidad, ritmo, tipos de enemigo, jefe)
 // vienen de public/assets/data/levels.json, cargado por el Loader en PreloadScene.
@@ -45,13 +46,24 @@ export default class WaveManager {
   }
 
   spawn(type) {
+    if (type === 'boss') { this.spawnBoss(); return; }
+
     const enemy = this.scene.enemies.get(0, 0);
     if (!enemy) { this.queue.unshift(type); return; } // pool lleno: reintentar luego
+    enemy.spawn(type, Phaser.Math.Between(40, GAME_WIDTH - 40), -30, this.level);
+  }
 
-    const isBoss = type === 'boss';
-    const x = isBoss ? GAME_WIDTH / 2 : Phaser.Math.Between(40, GAME_WIDTH - 40);
-    const y = isBoss ? -70 : -30;
-    enemy.spawn(type, x, y, this.level);
-    if (isBoss) this.scene.onBossSpawn(enemy);
+  /** El jefe es una clase propia (Boss), así que se crea aparte y se agrega al grupo de enemigos. */
+  spawnBoss() {
+    const enemies = this.scene.enemies;
+    if (enemies.isFull()) {
+      // Libera un hueco quitando un enemigo inactivo del pool.
+      const free = enemies.getFirstDead(false);
+      if (free) enemies.remove(free, true, true);
+    }
+    const boss = new Boss(this.scene, GAME_WIDTH / 2, -90);
+    enemies.add(boss, true);
+    boss.spawn('boss', GAME_WIDTH / 2, -90, this.level);
+    this.scene.onBossSpawn(boss);
   }
 }

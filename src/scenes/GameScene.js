@@ -43,7 +43,7 @@ export default class GameScene extends Phaser.Scene {
 
     // Grupos con pooling (los objetos se reutilizan).
     this.playerBullets = this.physics.add.group({ classType: Bullet, defaultKey: 'bullet', maxSize: 60 });
-    this.enemyBullets = this.physics.add.group({ classType: Bullet, defaultKey: 'enemyBullet', maxSize: 80 });
+    this.enemyBullets = this.physics.add.group({ classType: Bullet, defaultKey: 'enemyBullet', maxSize: 140 }); // el jefe en fase 3 dispara muchas balas
     this.enemies = this.physics.add.group({ classType: Enemy, defaultKey: 'enemy1', maxSize: 30, runChildUpdate: true });
     this.powerUps = this.physics.add.group({ classType: PowerUp, defaultKey: 'pu_triple', maxSize: 8, runChildUpdate: true });
 
@@ -126,7 +126,7 @@ export default class GameScene extends Phaser.Scene {
   // ---------- Oleadas ----------
   onLevelStart(level) {
     this.hud.setLevel(level);
-    this.showBanner(level === TOTAL_LEVELS ? '¡JEFE FINAL!' : `OLEADA ${level}`);
+    this.showBanner(level === TOTAL_LEVELS ? '¡OLEADA FINAL!' : `OLEADA ${level}`);
   }
 
   onLevelCleared(level) {
@@ -139,14 +139,38 @@ export default class GameScene extends Phaser.Scene {
     });
   }
 
+  // ---------- Jefe final ----------
   onBossSpawn(boss) {
     this.boss = boss;
     this.hud.showBoss();
+    this.showBanner('¡PELIGRO!', COLORS.danger, H / 2 - 10);
+    this.cameras.main.shake(400, 0.008);
+    audio.play('explosion');
   }
 
-  showBanner(text) {
-    const banner = this.add.text(W / 2, H / 2 - 80, text, {
-      fontFamily: FONT, fontSize: '20px', color: COLORS.gold, stroke: '#000000', strokeThickness: 6, align: 'center'
+  /** El jefe avisa cada vez que cambia de fase (2 y 3). */
+  onBossPhase(boss, phase) {
+    this.hud.setBossPhase(phase);
+    this.showBanner(phase === 2 ? '¡FASE 2!' : '¡FASE 3: FURIA!', phase === 2 ? COLORS.gold : COLORS.danger, H / 2 - 10);
+    this.cameras.main.shake(300, 0.01);
+    this.explode(boss.x, boss.y, 30);
+    audio.play('explosion');
+
+    // Recompensa por cada fase superada. Si el sistema de inventario existe (dropWeaponCrate), suelta
+    // una caja de arma; si no, suelta un power-up normal.
+    const x = boss.x;
+    const y = boss.y + 50;
+    if (typeof this.dropWeaponCrate === 'function') {
+      this.dropWeaponCrate(x, y);
+    } else {
+      const powerUp = this.powerUps.get(x, y);
+      if (powerUp) powerUp.spawn(phase === 2 ? 'shield' : 'triple', x, y);
+    }
+  }
+
+  showBanner(text, color = COLORS.gold, y = H / 2 - 80) {
+    const banner = this.add.text(W / 2, y, text, {
+      fontFamily: FONT, fontSize: '20px', color, stroke: '#000000', strokeThickness: 6, align: 'center'
     }).setOrigin(0.5).setDepth(95).setAlpha(0);
     this.tweens.add({
       targets: banner, alpha: 1, duration: 300, hold: 1000, yoyo: true,
@@ -156,24 +180,17 @@ export default class GameScene extends Phaser.Scene {
 
   // ---------- Disparos enemigos ----------
   enemyShoot(enemy) {
+    // Los enemigos normales apuntan hacia el jugador. (El jefe dispara por su cuenta en objects/Boss.js.)
     const x = enemy.x;
     const y = enemy.y + enemy.height * 0.4;
-    if (enemy.cfg.boss) {
-      // El jefe dispara un abanico de 5 balas.
-      [-40, -20, 0, 20, 40].forEach((deg) => {
-        const rad = Phaser.Math.DegToRad(deg);
-        this.fireEnemyBullet(x, y, Math.sin(rad) * 210, Math.cos(rad) * 210);
-      });
-    } else {
-      // Los demás apuntan hacia el jugador.
-      const angle = Phaser.Math.Angle.Between(x, y, this.player.x, this.player.y);
-      this.fireEnemyBullet(x, y, Math.cos(angle) * 220, Math.sin(angle) * 220);
-    }
+    const angle = Phaser.Math.Angle.Between(x, y, this.player.x, this.player.y);
+    this.fireEnemyBullet(x, y, Math.cos(angle) * 220, Math.sin(angle) * 220);
   }
 
-  fireEnemyBullet(x, y, vx, vy) {
+  // "style" es opcional: { texture, scale }. El jefe lo usa para su bala de cada fase.
+  fireEnemyBullet(x, y, vx, vy, style) {
     const bullet = this.enemyBullets.get(x, y);
-    if (bullet) bullet.fire(x, y, vx, vy);
+    if (bullet) bullet.fire(x, y, vx, vy, style);
   }
 
   // ---------- Colisiones (llamadas desde physics/collisions.js) ----------
@@ -215,6 +232,12 @@ export default class GameScene extends Phaser.Scene {
 
     if (enemy.cfg.boss) {
       this.hud.hideBoss();
+      // Cadena de explosiones alrededor del jefe antes de la pantalla de victoria.
+      for (let i = 1; i <= 5; i++) {
+        this.time.delayedCall(i * 180, () => {
+          this.explode(x + Phaser.Math.Between(-60, 60), y + Phaser.Math.Between(-40, 40), 30);
+        });
+      }
       this.endGame(true); // condición de victoria: derrotar al jefe
     } else if (Math.random() < POWERUP_DROP_CHANCE) {
       const powerUp = this.powerUps.get(x, y);

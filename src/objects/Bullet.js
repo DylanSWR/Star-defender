@@ -6,10 +6,24 @@ import { GAME_WIDTH, GAME_HEIGHT } from '../config.js';
 export default class Bullet extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, key) {
     super(scene, x, y, key);
+    this.baseKey = key; // imagen por defecto del grupo (bala del jugador o bala enemiga normal)
   }
 
-  fire(x, y, vx, vy) {
+  /**
+   * Dispara la bala. "style" es opcional: { texture, scale } permite cambiar la imagen y el tamaño
+   * (el jefe lo usa para tener una bala distinta en cada fase). Sin style vuelve a la imagen base,
+   * así una bala reutilizada del pool nunca "hereda" el aspecto del disparo anterior.
+   */
+  fire(x, y, vx, vy, style = {}) {
     this.enableBody(true, x, y, true, true);
+
+    const key = style.texture || this.baseKey;
+    if (this.texture.key !== key) {
+      this.setTexture(key);
+      this.body.setSize(this.width, this.height); // el área de colisión sigue a la nueva imagen
+    }
+    this.setScale(style.scale || 1);
+
     this.setVelocity(vx, vy);
     this.setRotation(Math.atan2(vy, vx) + Math.PI / 2);
   }
