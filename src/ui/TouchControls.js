@@ -13,21 +13,26 @@ export default class TouchControls {
   }
 
   createButton(scene, x, y, radius, label, key) {
-    const circle = scene.add.circle(x, y, radius, 0xffffff, 0.18)
-      .setStrokeStyle(3, 0xffffff, 0.7).setDepth(90).setInteractive();
+    const size = radius * 2;
+    const box = scene.add.rectangle(x, y, size, size, 0x0f172a, 0.55)
+      .setStrokeStyle(3, 0x38bdf8, 0.85).setDepth(90).setInteractive();
     scene.add.text(x, y, label, {
-      fontFamily: FONT, fontSize: label.length > 1 ? '18px' : '34px', fontStyle: 'bold', color: '#ffffff'
+      fontFamily: FONT,
+      fontSize: label.length > 1 ? '10px' : '20px',
+      color: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 3
     }).setOrigin(0.5).setDepth(91);
 
-    const press = () => { this.state[key] = true; circle.setFillStyle(0xffffff, 0.4); };
-    const release = () => { this.state[key] = false; circle.setFillStyle(0xffffff, 0.18); };
+    const press = () => { this.state[key] = true; box.setFillStyle(0x0ea5e9, 0.55).setStrokeStyle(3, 0xfde047, 1); };
+    const release = () => { this.state[key] = false; box.setFillStyle(0x0f172a, 0.55).setStrokeStyle(3, 0x38bdf8, 0.85); };
 
-    circle.on('pointerdown', press);
-    circle.on('pointerup', release);
-    circle.on('pointerout', release);
-    circle.on('pointerover', (pointer) => { if (pointer.isDown) press(); });
-    circle.release = release;
-    return circle;
+    box.on('pointerdown', press);
+    box.on('pointerup', release);
+    box.on('pointerout', release);
+    box.on('pointerover', (pointer) => { if (pointer.isDown) press(); });
+    box.release = release;
+    return box;
   }
 
   reset() { this.buttons.forEach((b) => b.release()); }

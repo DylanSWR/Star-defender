@@ -2,8 +2,8 @@
 export const GAME_WIDTH = 480;
 export const GAME_HEIGHT = 800;
 
-export const FONT = 'Arial, Helvetica, sans-serif';
-export const COLORS = { text: '#ffffff', accent: '#38bdf8', gold: '#fde68a', danger: '#fca5a5', ok: '#86efac' };
+export const FONT = '"Press Start 2P", "Courier New", monospace';
+export const COLORS = { text: '#ffffff', accent: '#38bdf8', gold: '#fde047', danger: '#fb7185', ok: '#4ade80' };
 
 export const SAVE_KEY = 'star-defender-save-v1';
 
@@ -21,10 +21,10 @@ export const PLAYER = {
 
 // Tipos de enemigo. "move" decide el patrón de movimiento (ver objects/Enemy.js).
 export const ENEMY_TYPES = {
-  grunt:  { texture: 'enemy1', hp: 1,  speed: 110, score: 10,  move: 'straight', fireDelay: 0 },
-  weaver: { texture: 'enemy2', hp: 2,  speed: 95,  score: 25,  move: 'sine',     fireDelay: 0 },
-  gunner: { texture: 'enemy3', hp: 3,  speed: 75,  score: 40,  move: 'straight', fireDelay: 1800 },
-  boss:   { texture: 'boss',   hp: 70, speed: 70,  score: 500, move: 'boss',     fireDelay: 1100, boss: true }
+  grunt:  { texture: 'enemy1', scale: 0.44, hp: 1,  speed: 110, score: 10,  move: 'straight', fireDelay: 0 },
+  weaver: { texture: 'enemy2', scale: 0.44, hp: 2,  speed: 95,  score: 25,  move: 'sine',     fireDelay: 0 },
+  gunner: { texture: 'enemy3', scale: 0.42, hp: 3,  speed: 75,  score: 40,  move: 'straight', fireDelay: 1800 },
+  boss:   { texture: 'boss',   scale: 0.85, hp: 70, speed: 70,  score: 500, move: 'boss',     fireDelay: 1100, boss: true }
 };
 
 export const POWERUP_KINDS = ['triple', 'shield', 'life'];

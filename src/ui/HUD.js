@@ -5,11 +5,11 @@ import audio from '../audio/AudioManager.js';
 // HUD: puntaje, récord, vidas, oleada, barra del jefe y botones de pausa / sonido.
 export default class HUD {
   constructor(scene, { highScore, onPause, onMute }) {
-    const style = (size, color) => ({ fontFamily: FONT, fontSize: size, fontStyle: 'bold', color, stroke: '#000000', strokeThickness: 3 });
+    const style = (size, color) => ({ fontFamily: FONT, fontSize: size, color, stroke: '#000000', strokeThickness: 4 });
 
-    this.scoreText = scene.add.text(14, 10, 'PUNTOS 0', style('20px', COLORS.text)).setDepth(100);
-    this.highText = scene.add.text(W - 14, 10, `RÉCORD ${highScore}`, style('20px', COLORS.gold)).setOrigin(1, 0).setDepth(100);
-    this.levelText = scene.add.text(W / 2, 52, 'OLEADA 1', style('18px', COLORS.accent)).setOrigin(0.5, 0.5).setDepth(100);
+    this.scoreText = scene.add.text(14, 12, 'PUNTOS 0', style('11px', COLORS.text)).setDepth(100);
+    this.highText = scene.add.text(W - 14, 12, `RÉCORD ${highScore}`, style('11px', COLORS.gold)).setOrigin(1, 0).setDepth(100);
+    this.levelText = scene.add.text(W / 2, 52, 'OLEADA 1', style('10px', COLORS.accent)).setOrigin(0.5, 0.5).setDepth(100);
 
     // Iconos de vidas.
     this.lifeIcons = [];
@@ -17,13 +17,15 @@ export default class HUD {
       this.lifeIcons.push(scene.add.image(26 + i * 26, 52, 'player').setScale(0.5).setDepth(100));
     }
 
-    this.pauseBtn = new Button(scene, W - 34, 52, 'II', onPause, { width: 44, height: 30, fontSize: '18px' }).setDepth(100);
-    this.muteBtn = new Button(scene, W - 118, 52, '', onMute, { width: 100, height: 30, fontSize: '14px' }).setDepth(100);
+    this.pauseBtn = new Button(scene, W - 30, 52, 'II', onPause, { width: 42, height: 30, fontSize: '10px' }).setDepth(100);
+    this.muteBtn = new Button(scene, W - 114, 52, '', onMute, {
+      width: 112, height: 30, fill: 0x334155, hoverFill: 0x475569, fontSize: '8px'
+    }).setDepth(100);
     this.refreshMute();
 
-    // Barra de vida del jefe (oculta hasta que aparece).
-    this.bossBg = scene.add.rectangle(W / 2, 84, 304, 14, 0x000000, 0.7).setStrokeStyle(2, 0xffffff).setDepth(100).setVisible(false);
-    this.bossFill = scene.add.rectangle(W / 2 - 150, 84, 300, 10, 0xef4444).setOrigin(0, 0.5).setDepth(101).setVisible(false);
+    // Barra de vida del jefe con borde retro pixelado (oculta hasta que aparece).
+    this.bossBg = scene.add.rectangle(W / 2, 84, 306, 16, 0x020617, 0.9).setStrokeStyle(3, 0xe2e8f0).setDepth(100).setVisible(false);
+    this.bossFill = scene.add.rectangle(W / 2 - 148, 84, 296, 10, 0xef4444).setOrigin(0, 0.5).setDepth(101).setVisible(false);
   }
 
   setScore(v) { this.scoreText.setText(`PUNTOS ${v}`); }

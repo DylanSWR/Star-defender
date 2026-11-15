@@ -18,8 +18,10 @@ export default class FpsMeter {
     this.el = document.createElement('div');
     Object.assign(this.el.style, {
       position: 'fixed', top: '8px', left: '8px', zIndex: 10,
-      padding: '6px 10px', background: 'rgba(0, 0, 0, 0.75)', color: '#86efac',
-      font: 'bold 13px/1.45 monospace', borderRadius: '6px', pointerEvents: 'none',
+      padding: '8px 10px', background: 'rgba(5, 8, 22, 0.92)', color: '#4ade80',
+      font: '9px/1.75 "Press Start 2P", "Courier New", monospace',
+      border: '2px solid #38bdf8', boxShadow: '3px 3px 0 #020617',
+      borderRadius: '0px', pointerEvents: 'none',
       whiteSpace: 'pre', display: this.visible ? 'block' : 'none'
     });
     document.body.appendChild(this.el);
