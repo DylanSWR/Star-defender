@@ -6,6 +6,7 @@ import GameScene from './scenes/GameScene.js';
 import PauseScene from './scenes/PauseScene.js';
 import GameOverScene from './scenes/GameOverScene.js';
 import audio from './audio/AudioManager.js';
+import FpsMeter from './ui/FpsMeter.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -21,7 +22,10 @@ const config = {
   scene: [PreloadScene, MenuScene, GameScene, PauseScene, GameOverScene]
 };
 
-new Phaser.Game(config);
+const game = new Phaser.Game(config);
+
+// Medidor de FPS para la evidencia de rendimiento (tecla F o ?fps en la URL).
+new FpsMeter(game);
 
 // Los navegadores solo permiten audio después de un gesto del usuario.
 const unlockAudio = () => audio.unlock();

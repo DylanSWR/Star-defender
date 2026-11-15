@@ -10,25 +10,28 @@ export default class PauseScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.rectangle(W / 2, H / 2, W, H, 0x000000, 0.72);
-    this.add.text(W / 2, 200, 'PAUSA', {
-      fontFamily: FONT, fontSize: '48px', fontStyle: 'bold', color: '#ffffff'
+    this.add.rectangle(W / 2, H / 2, W, H, 0x000000, 0.76);
+    this.add.text(W / 2, 195, 'PAUSA', {
+      fontFamily: FONT, fontSize: '28px', color: '#ffffff', stroke: '#000000', strokeThickness: 6
     }).setOrigin(0.5);
 
-    new Button(this, W / 2, 300, 'REANUDAR', () => this.resumeGame(), { width: 260 });
-    new Button(this, W / 2, 366, 'REINICIAR', () => this.scene.start('GameScene', { level: 1 }), { width: 260, fill: 0x15803d });
+    new Button(this, W / 2, 300, 'REANUDAR', () => this.resumeGame(), { width: 270, fontSize: '13px' });
+    new Button(this, W / 2, 366, 'REINICIAR', () => this.scene.start('GameScene', { level: 1 }), {
+      width: 270, fill: 0x15803d, hoverFill: 0x22c55e, fontSize: '13px'
+    });
     new Button(this, W / 2, 432, 'MENÚ PRINCIPAL', () => {
       this.scene.stop('GameScene');
       this.scene.start('MenuScene');
-    }, { width: 260, fill: 0x991b1b });
+    }, { width: 270, fill: 0x991b1b, hoverFill: 0xdc2626, fontSize: '12px' });
     this.muteBtn = new Button(this, W / 2, 498, '', () => {
       audio.toggleMute();
       this.refreshMute();
-    }, { width: 260, fill: 0x475569 });
+    }, { width: 270, fill: 0x475569, hoverFill: 0x64748b, fontSize: '12px' });
     this.refreshMute();
 
-    this.add.text(W / 2, 580, 'Flechas / A D: mover   ESPACIO: disparar\nP o ESC: reanudar   M: sonido', {
-      fontFamily: FONT, fontSize: '15px', color: '#e2e8f0', align: 'center', lineSpacing: 5
+    this.add.text(W / 2, 585, 'Flechas / A D: mover   ESPACIO: disparar\nP o ESC: reanudar   M: sonido', {
+      fontFamily: FONT, fontSize: '8px', color: '#e2e8f0', stroke: '#000000', strokeThickness: 3,
+      align: 'center', lineSpacing: 10
     }).setOrigin(0.5);
 
     this.input.keyboard.on('keydown-P', () => this.resumeGame());
