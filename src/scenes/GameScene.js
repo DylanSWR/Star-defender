@@ -146,7 +146,7 @@ export default class GameScene extends Phaser.Scene {
 
   showBanner(text) {
     const banner = this.add.text(W / 2, H / 2 - 80, text, {
-      fontFamily: FONT, fontSize: '38px', fontStyle: 'bold', color: COLORS.gold, stroke: '#000000', strokeThickness: 6
+      fontFamily: FONT, fontSize: '20px', color: COLORS.gold, stroke: '#000000', strokeThickness: 6, align: 'center'
     }).setOrigin(0.5).setDepth(95).setAlpha(0);
     this.tweens.add({
       targets: banner, alpha: 1, duration: 300, hold: 1000, yoyo: true,
