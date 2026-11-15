@@ -33,6 +33,10 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('boss', 'images/boss.png');
     this.load.image('bullet', 'images/bullet_player.png');
     this.load.image('enemyBullet', 'images/bullet_enemy.png');
+    // Balas del jefe final, una por fase (ver BOSS.bullets en config.js)
+    this.load.image('bossBullet1', 'images/boss_bullet_1.png');
+    this.load.image('bossBullet2', 'images/boss_bullet_2.png');
+    this.load.image('bossBullet3', 'images/boss_bullet_3.png');
     this.load.image('pu_triple', 'images/powerup_triple.png');
     this.load.image('pu_shield', 'images/powerup_shield.png');
     this.load.image('pu_life', 'images/powerup_life.png');
