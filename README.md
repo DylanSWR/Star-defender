@@ -113,17 +113,26 @@ Pooling de objetos (balas, enemigos, power-ups, cajas y misiles se reutilizan), 
 uno, salvo el fondo de 740 KB), todos los assets cargados una sola vez en `PreloadScene` con barra de progreso, un solo
 emisor de partículas y tiempos de armas calculados con `delta`. Peso total de `public/assets/`: unos 8 MB, de los cuales
 la música ocupa 5.8 MB.
-Mediciones de FPS y pruebas en móvil: [docs/PRUEBAS.md](docs/PRUEBAS.md).
+**Resultados medidos** (detalle y capturas en [docs/PRUEBAS.md](docs/PRUEBAS.md)):
+
+| Dispositivo | FPS promedio | FPS mínimo | Meta |
+| --- | --- | --- | --- |
+| PC ASUS TUF A15 (Ryzen 7 serie 7000, RTX 4050) | 144.5 | 144.2 | ≥ 45 ✔ |
+| Celular real RedMagic 8 Pro (Chrome Android) | 60.9 | 59.6 | ≥ 45 ✔ |
+
+Carga en la PC: 1.66 s hasta tener todos los archivos.
 
 ## Capturas
-<!-- Se completan cuando estén las imágenes en docs/capturas/ (ver docs/CAPTURAS.md) -->
-| Menú | En juego | Inventario |
+| En juego (oleada) | Jefe final e inventario | Game Over con récord |
 | --- | --- | --- |
-| ![Menú](docs/capturas/menu.png) | ![Oleada](docs/capturas/oleada.png) | ![Inventario](docs/capturas/inventario.png) |
+| ![Oleada en juego](docs/capturas/pruebas/fps-pc-partida.png) | ![Jefe final](docs/capturas/pruebas/fps-pc-jefe.png) | ![Game Over](docs/capturas/pruebas/gameover.png) |
 
-| Jefe final | Game Over | Móvil y FPS |
+| Celular real con controles táctiles | Tablet (iPad Pro 13) | Móvil (Pixel 9 Pro Fold) |
 | --- | --- | --- |
-| ![Jefe](docs/capturas/jefe.png) | ![Game Over](docs/capturas/gameover.png) | ![Móvil y FPS](docs/capturas/movil-fps.png) |
+| ![Celular real](docs/capturas/pruebas/movil-fps.jpg) | ![iPad](docs/capturas/pruebas/ipad-pro-13.png) | ![Pixel](docs/capturas/pruebas/pixel-9-pro-fold.png) |
+
+Las capturas se tomaron con el medidor de FPS activo (panel de la esquina superior izquierda).
+Descripción de cada una: [docs/CAPTURAS.md](docs/CAPTURAS.md).
 
 ## Integrantes
 | Integrante | Responsabilidad |

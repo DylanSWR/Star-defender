@@ -1,19 +1,30 @@
 # Capturas de Star Defender
 
-Las imágenes van en `docs/capturas/` en formato PNG, con el nombre indicado en la tabla.
-Cada integrante toma las suyas y Kened las reúne aquí.
+Todas las imágenes están en `docs/capturas/pruebas/`. Primero se listan las 6 que aparecen en el README y luego la
+evidencia de cada prueba.
 
-| # | Archivo | Qué muestra | Tomada por | Lista |
-|---|---|---|---|---|
-| 1 | `menu.png` | Menú principal: título, Jugar, Continuar, instrucciones y controles | Ronny | [ ] |
-| 2 | `oleada.png` | Oleada en juego: enemigos, HUD con puntaje y vidas, un power-up | Ronny | [ ] |
-| 3 | `inventario.png` | Arma especial activa con su barra de tiempo | Santiago | [ ] |
-| 4 | `jefe.png` | Jefe final en fase 3 (furia) con su barra de vida | Dylan | [ ] |
-| 5 | `gameover.png` | Pantalla de Game Over con el récord | Kened | [ ] |
-| 6 | `movil-fps.png` | Juego en móvil con controles táctiles y el medidor de FPS visible | Kened | [ ] |
+## Capturas del README (6)
 
-## Cómo tomarlas
+| # | Archivo | Qué muestra |
+|---|---|---|
+| 1 | `pruebas/fps-pc-partida.png` | Oleada en juego en la PC: HUD con puntos, récord, vidas, oleada e inventario vacío; 144 FPS |
+| 2 | `pruebas/fps-pc-jefe.png` | Oleada 5: jefe DESTRUCTOR con su barra de vida y nombre, escoltas, balas y un láser guardado en el inventario |
+| 3 | `pruebas/gameover.png` | Game Over con puntuación, oleada alcanzada, récord y botón CONTINUAR; el panel muestra el estado `GAME_OVER` |
+| 4 | `pruebas/movil-fps.jpg` | Celular real (RedMagic 8 Pro): botones táctiles, inventario y 60.9 FPS de promedio |
+| 5 | `pruebas/ipad-pro-13.png` | Tablet (emulación iPad Pro 13): escala y controles táctiles |
+| 6 | `pruebas/pixel-9-pro-fold.png` | Móvil (emulación Pixel 9 Pro Fold): banner ¡OLEADA SUPERADA! y controles táctiles |
 
-- Ventana del navegador a tamaño normal y sin la consola abierta (salvo la de FPS si se usa DevTools).
-- Windows: `Win + Shift + S`, recortar solo el área del juego y guardar como PNG.
-- Para la captura de FPS: abrir `http://localhost:5173/?fps` (o pulsar **F** en el juego) y jugar al menos 1 minuto antes de capturar.
+Todas las capturas las tomó Kened durante las pruebas, con el medidor de FPS activo.
+
+## Evidencia de pruebas (`pruebas/`)
+
+| Archivo | Qué muestra |
+|---|---|
+| `fps-pc-partida.png` | FPS en la PC durante una partida: 144.5 de promedio, 144.2 de mínimo |
+| `fps-pc-jefe.png` | FPS en la PC con el jefe, escoltas y balas en pantalla: 144.5 / 144.2 |
+| `carga-sin-limite.png` | Pestaña Network: carga completa en 1.66 s |
+| `carga-fast4g.png` | Pestaña Network con Fast 4G simulado: 17.88 s |
+| `pixel-9-pro-fold.png` | Modo dispositivo de Chrome, Pixel 9 Pro Fold: botones táctiles e inventario |
+| `ipad-pro-13.png` | Modo dispositivo de Chrome, iPad Pro 13: botones táctiles e inventario |
+
+Los resultados completos están en [PRUEBAS.md](PRUEBAS.md).
