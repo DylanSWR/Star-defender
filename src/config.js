@@ -46,3 +46,37 @@ export const BOSS = {
 
 export const POWERUP_KINDS = ['triple', 'shield', 'life'];
 export const POWERUP_DROP_CHANCE = 0.14;
+
+// ---------- Inventario y armas temporales ----------
+// Orden de los tipos de arma (también es el orden de los íconos del sorteo de cajas).
+export const WEAPON_KINDS = ['laser', 'missile', 'shock'];
+
+export const INVENTORY = {
+  slots: 3,              // espacios del inventario (teclas 1, 2 y 3)
+  crateDropChance: 0.10, // probabilidad de que un enemigo normal suelte una caja de arma
+  crateFallSpeed: 100,   // velocidad de caída de la caja (px/s)
+  textColor: '#ffffff'
+};
+
+// Datos de cada arma. durationMs = 0 significa efecto instantáneo (un solo uso).
+export const WEAPONS = {
+  laser: {
+    label: 'LÁSER', color: 0xef4444, durationMs: 8000,
+    beamWidth: 24,   // ancho del rayo (px), también es su área de daño
+    damage: 1,       // daño por golpe a cada enemigo que toca el rayo
+    tickMs: 110      // cada cuánto daña el rayo (~9 de daño por segundo)
+  },
+  missile: {
+    label: 'MISILES', color: 0xf59e0b, durationMs: 10000,
+    fireDelay: 420,  // ms entre misiles
+    damage: 3,
+    speed: 340,
+    turnRate: 4.5,   // radianes por segundo con los que gira hacia su objetivo
+    lifeMs: 3500,    // el misil se autodestruye pasado este tiempo
+    launchSpread: 20 // grados de apertura al salir, para que se vea la curva
+  },
+  shock: {
+    label: 'ONDA', color: 0xa78bfa, durationMs: 0,
+    damage: 10       // daño a todos los enemigos en pantalla; además borra las balas enemigas
+  }
+};

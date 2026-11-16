@@ -1,10 +1,11 @@
 import { GAME_WIDTH as W, PLAYER, FONT, COLORS, BOSS } from '../config.js';
 import Button from './Button.js';
 import audio from '../audio/AudioManager.js';
+import InventoryHUD from './InventoryHUD.js';
 
 // HUD: puntaje, récord, vidas, oleada, barra del jefe y botones de pausa / sonido.
 export default class HUD {
-  constructor(scene, { highScore, onPause, onMute }) {
+  constructor(scene, { highScore, onPause, onMute, onSlot, inventoryX }) {
     const style = (size, color) => ({ fontFamily: FONT, fontSize: size, color, stroke: '#000000', strokeThickness: 4 });
 
     this.scoreText = scene.add.text(14, 12, 'PUNTOS 0', style('11px', COLORS.text)).setDepth(100);
@@ -27,6 +28,9 @@ export default class HUD {
     this.bossBg = scene.add.rectangle(W / 2, 84, 306, 16, 0x020617, 0.9).setStrokeStyle(3, 0xe2e8f0).setDepth(100).setVisible(false);
     this.bossFill = scene.add.rectangle(W / 2 - 148, 84, 296, 10, BOSS.colors[1]).setOrigin(0, 0.5).setDepth(101).setVisible(false);
     this.bossLabel = scene.add.text(W / 2, 104, '', style('8px', COLORS.text)).setOrigin(0.5).setDepth(101).setVisible(false);
+
+    // Inventario de armas (parte inferior de la pantalla).
+    this.inventory = new InventoryHUD(scene, { centerX: inventoryX ?? W / 2, onSlot });
   }
 
   setScore(v) { this.scoreText.setText(`PUNTOS ${v}`); }
@@ -47,5 +51,9 @@ export default class HUD {
     this.bossFill.setFillStyle(BOSS.colors[phase]);
     this.bossLabel.setText(`${BOSS.name}  FASE ${phase}`);
   }
+  /** Inventario: contenido de los espacios y arma temporal activa. */
+  setInventory(slots, active) { this.inventory.refresh(slots, active); }
+  /** Barra de tiempo del arma activa (1 = completa, 0 = agotada). */
+  setWeaponTime(ratio) { this.inventory.setTime(ratio); }
   hideBoss() { this.bossBg.setVisible(false); this.bossFill.setVisible(false); this.bossLabel.setVisible(false); }
 }

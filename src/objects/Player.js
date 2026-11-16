@@ -30,6 +30,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   /** Dispara respetando la cadencia. Con power-up lanza 3 balas en abanico. */
   shoot(time) {
+    // Un arma temporal del inventario (láser o misiles) reemplaza el disparo normal.
+    if (this.scene.inventory && this.scene.inventory.fireSpecial()) return;
+
     if (time < this.nextShot) return;
     this.nextShot = time + PLAYER.fireDelay;
 
